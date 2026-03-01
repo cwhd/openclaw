@@ -3,6 +3,10 @@ export function normalizeLegacyConfigValues(cfg: OpenClawConfig): {
   config: OpenClawConfig;
   changes: string[];
 } {
+  // Allow skipping legacy migrations for forks that manage their own config
+  if (process.env.OPENCLAW_SKIP_LEGACY_MIGRATIONS === "1") {
+    return { config: cfg, changes: [] };
+  }
   const changes: string[] = [];
   let next: OpenClawConfig = cfg;
 

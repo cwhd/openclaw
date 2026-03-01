@@ -197,6 +197,15 @@ export async function installScheduledTask({
     workingDirectory,
     environment,
   });
+  // Backup previous script before overwrite (protect local edits)
+  try {
+    const existing = await fs.readFile(scriptPath, "utf8").catch(() => null);
+    if (existing && existing !== script) {
+      await fs.writeFile(scriptPath + ".bak", existing, "utf8");
+    }
+  } catch {
+    // ignore backup failures
+  }
   await fs.writeFile(scriptPath, script, "utf8");
 
   const taskName = resolveTaskName(env);
