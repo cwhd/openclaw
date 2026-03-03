@@ -88,6 +88,10 @@ export function createSessionsSendTool(opts?: {
       };
 
       let sessionKey = sessionKeyParam;
+      // When only agentId is provided (no sessionKey, no label), resolve to that agent's main session.
+      if (!sessionKey && !labelParam && labelAgentIdParam) {
+        sessionKey = `agent:${normalizeAgentId(labelAgentIdParam)}:main`;
+      }
       if (!sessionKey && labelParam) {
         const requesterAgentId = requesterInternalKey
           ? resolveAgentIdFromSessionKey(requesterInternalKey)
